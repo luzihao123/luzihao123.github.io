@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="yhhhhhhhhhhh">
+    <meta name="author" content="Joe">
+    
+    <title>
+        
+            设计模式-发布订阅模式 |
+        
+        Joe 的笔记
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/31390234?v=4">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://avatars.githubusercontent.com/u/31390234?v=4","favicon":"https://avatars.githubusercontent.com/u/31390234?v=4","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"早睡早起，运动减肥~~"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                Joe 的笔记
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">设计模式-发布订阅模式</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="https://avatars.githubusercontent.com/u/31390234?v=4">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">Joe</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;
+        <span class="pc">2022-04-10 16:37:15</span>
+        <span class="mobile">2022-04-10 16:37</span>
+    </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+        <span class="article-wordcount article-meta-item">
+            <i class="fas fa-file-word"></i>&nbsp;<span>962 字</span>
+        </span>
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
+        </span>
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h2 id="设计模式–发布订阅模式"><a href="#设计模式–发布订阅模式" class="headerlink" title="设计模式–发布订阅模式"></a>设计模式–发布订阅模式</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>发布订阅模式又称为观察者模式，当一个对象状态改变时，所有依赖于它的对象都会得到通知。在javascript中，一般用事件模型来替代传统的发布-订阅模式</p>
+<h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>楼盘即将推出新房，想购买的客户分别在售楼处登记了自己的电话，新楼盘推出时候售楼处会遍历记录的电话，依次发送信息给他们</p>
+<h3 id="自定义事件"><a href="#自定义事件" class="headerlink" title="自定义事件"></a>自定义事件</h3><p>售楼处案例可以写成以下最简单写法, 定义一个售楼处对象，里面有个一数组存放着客户的订阅信息，一个listen方法做订阅，一个trigger方法做发布，通过push加入订阅信息，触发时遍历所有订阅信息，把订阅的方法(fn函数)全部运行一遍</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> salesOffics = &#123;&#125;</span><br><span class="line">salesOffices.<span class="property">clientList</span> = []</span><br><span class="line">saleOffices.<span class="property">listen</span> = <span class="keyword">function</span> (<span class="params">fn</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">clientList</span>.<span class="title function_">push</span>(fn)</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.<span class="property">trigger</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>,fn;fn = <span class="variable language_">this</span>.<span class="property">clientList</span>[i];i++) &#123;</span><br><span class="line">        fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">salsesOffics.<span class="title function_">listen</span>(<span class="keyword">function</span> (<span class="params">price, squareMeter</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格 = &#x27;</span>, price)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;面积 = &#x27;</span>, squareMeter)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffics.<span class="title function_">listen</span>(<span class="keyword">function</span> (<span class="params">price, squareMeter</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格 = &#x27;</span>, price)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;面积 = &#x27;</span>, squareMeter)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffics.<span class="title function_">trigger</span>(<span class="number">2000000</span>, <span class="number">88</span>)</span><br><span class="line">salsesOffics.<span class="title function_">trigger</span>(<span class="number">3000000</span>, <span class="number">120</span>)</span><br></pre></td></tr></table></figure>
+<p>这个案例的问题是假如我只想订阅88平米的房子， 120平米房子信息变化时候也会收到信息，为了区分订阅事件的不同，可以加一个key，把clientList由于 <em>数组变成对象</em> ，来区分订阅内容</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> salesOffics = &#123;&#125;</span><br><span class="line">salesOffices.<span class="property">clientList</span> = &#123;&#125;</span><br><span class="line">salesOffices.<span class="property">listen</span> = <span class="keyword">function</span> (<span class="params">fn, key</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!salesOffices.<span class="property">clientList</span>[key]) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">clientList</span> = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">client</span>[key].<span class="title function_">push</span>(fn)</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.<span class="property">trigger</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>) <span class="comment">// 取出第一个参数并将这个参数从argument移除</span></span><br><span class="line">    <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">    <span class="keyword">if</span> (!fns || !fns.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    fns.<span class="title function_">forEach</span>(<span class="function"><span class="params">f</span> =&gt;</span> f.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样改写后在使用listen时候多加一个参数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">salesOffics.<span class="title function_">listen</span>(<span class="function">(<span class="params">price</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price), <span class="string">&#x27;88&#x27;</span>)</span><br><span class="line">salesOffics.<span class="title function_">listen</span>(<span class="function">(<span class="params">price</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price), <span class="string">&#x27;120&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<p>这样两次订阅分别订阅了不同的面积，只有所对应面积的信息触发会通知到订阅者</p>
+<h3 id="通用实现"><a href="#通用实现" class="headerlink" title="通用实现"></a>通用实现</h3><p>把发布订阅功能提出出来，放在一个单独的对象中，就可以在不同情况下重用这段代码<br>顺便加上删除订阅的代码</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = &#123;</span><br><span class="line">    <span class="attr">clientList</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">listen</span>: <span class="keyword">function</span>(<span class="params">key, fn</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">clientList</span>[key]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">clientList</span>[key] = []</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">clientList</span>[key].<span class="title function_">push</span>(fn)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">trigger</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>)</span><br><span class="line">        <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">        <span class="keyword">if</span> (!fns || fns.<span class="property">length</span> === <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        fns.<span class="title function_">forEach</span>(<span class="function"><span class="params">f</span> =&gt;</span>f.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>))</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">remove</span>: <span class="keyword">function</span>(<span class="params">key, fn</span>) &#123;</span><br><span class="line">        <span class="comment">// key: 订阅类型  fn: 具体谁的订阅，如不传，删除此类型下全部订阅</span></span><br><span class="line">        <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">        <span class="keyword">if</span> (!fns) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!fn) &#123;</span><br><span class="line">            fns.<span class="property">length</span> = <span class="number">0</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> l = fns.<span class="property">length</span>; l &gt;=<span class="number">0</span>; l--) &#123;</span><br><span class="line">                <span class="keyword">var</span> _fn = fns[l]</span><br><span class="line">                <span class="keyword">if</span> (_fn === fn) &#123;</span><br><span class="line">                    fns.<span class="title function_">splice</span>(l, <span class="number">1</span>)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> installEvent = <span class="keyword">function</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    event.<span class="title function_">forEach</span>(<span class="function"><span class="params">i</span> =&gt;</span> &#123;</span><br><span class="line">        obj[i] = event[i]</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>测试代码  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> salsesOffice = &#123;&#125;</span><br><span class="line"><span class="title function_">intallEvent</span>(salsesOffice)</span><br><span class="line">salsesOffice.<span class="title function_">listen</span>(<span class="string">&#x27;88&#x27;</span>, fn1 = <span class="keyword">function</span>(<span class="params">price</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffice.<span class="title function_">listen</span>(<span class="string">&#x27;120&#x27;</span>, fn2 = <span class="keyword">function</span>(<span class="params">price</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffice.<span class="title function_">listen</span>(<span class="string">&#x27;120&#x27;</span>, fn3 = <span class="keyword">function</span>(<span class="params">price</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffice.<span class="title function_">remove</span>(<span class="string">&#x27;120&#x27;</span>, fn2)</span><br></pre></td></tr></table></figure>
+
+<h3 id="先发布后订阅"><a href="#先发布后订阅" class="headerlink" title="先发布后订阅"></a>先发布后订阅</h3><p>也许有时候需要先发布信息后进行订阅，我用了一个缓存对象来实现，在listen 中触发缓存，trigger中加入缓存</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Event</span> = &#123;</span><br><span class="line">    <span class="attr">cache</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">clientList</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">listen</span>: <span class="keyword">function</span>(<span class="params">key, fn</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">clientList</span>[key]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">clientList</span>[key] = []</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">clientList</span>[key].<span class="title function_">push</span>(fn)</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">cache</span>[key]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">cache</span>[key].<span class="title function_">forEach</span>(<span class="function"><span class="params">v</span>=&gt;</span>&#123;</span><br><span class="line">               fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, v);</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">cache</span>[key] = []</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">trigger</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>)</span><br><span class="line">        <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">        <span class="keyword">if</span> (!fns || fns.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">cache</span>[key]) &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">cache</span>[key] = []</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">cache</span>[key].<span class="title function_">push</span>(<span class="variable language_">arguments</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            fns.<span class="title function_">forEach</span>(<span class="function"><span class="params">f</span> =&gt;</span>f.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+
+        
+            <ul class="post-tags-box">
+                
+                    <li class="tag-item">
+                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#设计模式</a>&nbsp;
+                    </li>
+                
+            </ul>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2022/01/15/hello-world/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">设计模式-享元模式</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>
+              -
+            
+            2022&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">Joe</a>
+        </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.5</a>
+        </div>
+        
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E2%80%93%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%BC%8F"><span class="nav-text">设计模式–发布订阅模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A1%88%E4%BE%8B"><span class="nav-text">案例</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6"><span class="nav-text">自定义事件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%9A%E7%94%A8%E5%AE%9E%E7%8E%B0"><span class="nav-text">通用实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E5%8F%91%E5%B8%83%E5%90%8E%E8%AE%A2%E9%98%85"><span class="nav-text">先发布后订阅</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/dark-light-toggle.js"></script>
+
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.5/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>
