@@ -166,7 +166,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>506 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>508 字</span>
         </span>
     
     
@@ -185,15 +185,50 @@
         <div class="article-content markdown-body">
             <h2 id="设计模式–装饰者模式"><a href="#设计模式–装饰者模式" class="headerlink" title="设计模式–装饰者模式"></a>设计模式–装饰者模式</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>给对象动态的添加职责的方式称装饰者模式。装饰者模式能够在不改变对象自身的基础上，在程序运行期间给对象动态的添加职责。根继承相比，这是一种更灵活的方法</p>
 <h3 id="通过保存之前函数引用的方式改写"><a href="#通过保存之前函数引用的方式改写" class="headerlink" title="通过保存之前函数引用的方式改写"></a>通过保存之前函数引用的方式改写</h3><p>如果我想在某个函数上增加一些方法，但也不想改变原来函数，我可以先保存一下这个函数的引用，再新建一个函数，执行这个引用函数。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="number">1</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> _a = a</span><br><span class="line">a = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">_a</span>()</span><br><span class="line">    <span class="title function_">alert</span>(<span class="number">2</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    var a = function () &#123;
+        alert(1)
+    &#125;
+    var _a = a
+    a = function () &#123;
+        _a()
+        alert(2)
+    &#125;
+</code></pre>
 <p>这样就可以在a函数上增加新方法而不修改原来的a函数，但这样的缺陷也存在，</p>
 <ol>
 <li>我们需要维护中间变量_a, 如果所加的装饰函数不止1个，会有很多中间变量需要维护</li>
-<li>会存在this被劫持的问题<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> <span class="comment">// 错误示例</span></span><br><span class="line"><span class="keyword">var</span> _getElement = <span class="variable language_">document</span>.<span class="property">getElementById</span></span><br><span class="line"><span class="variable language_">document</span>.<span class="property">getElementById</span> = <span class="keyword">function</span>(<span class="params">id</span>) &#123;</span><br><span class="line">    <span class="title function_">alert</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">return</span> <span class="title function_">_getElement</span>(id)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> button = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;button&#x27;</span>)</span><br></pre></td></tr></table></figure>
-上面方法是错误的，因为_getElement()成了一个全局函数，而我们希望的document.getElementById 的this引用指向document，所以需要改写return方法<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> _getElement.<span class="title function_">call</span>(<span class="variable language_">document</span>, ...<span class="variable language_">arguments</span>)</span><br></pre></td></tr></table></figure></li>
+<li>会存在this被劫持的问题<pre><code class="javascript"> // 错误示例
+var _getElement = document.getElementById
+document.getElementById = function(id) &#123;
+    alert(1)
+    return _getElement(id)
+&#125;
+var button = document.getElementById(&#39;button&#39;)
+</code></pre>
+上面方法是错误的，因为_getElement()成了一个全局函数，而我们希望的document.getElementById 的this引用指向document，所以需要改写return方法<pre><code class="javascript">return _getElement.call(document, ...arguments)
+</code></pre>
+</li>
 </ol>
 <h3 id="AOP"><a href="#AOP" class="headerlink" title="AOP"></a>AOP</h3><p>在Function原型上定义两个方法，before,after, 然后我们用这两个方法来给原函数添加功能。需要先保留当前函数的this指向，在before,after的返回函数中使用正确的this指向，以免this指向了全局</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">before</span> = <span class="keyword">function</span>(<span class="params">beforeFn</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> _self = <span class="variable language_">this</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        beforeFn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>)</span><br><span class="line">        <span class="keyword">return</span> _self.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Function</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">after</span> = <span class="keyword">function</span>(<span class="params">afterFn</span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> _self = <span class="variable language_">this</span></span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> ret = _self.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>)</span><br><span class="line">        afterFn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>)</span><br><span class="line">        <span class="keyword">return</span> ret</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用</span></span><br><span class="line">a = a.<span class="title function_">before</span>(<span class="function">() =&gt;</span> <span class="title function_">alert</span>(<span class="number">1</span>)).<span class="title function_">aflter</span>(<span class="function">() =&gt;</span> <span class="title function_">alert</span>(<span class="number">2</span>))</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">  Function.prototype.before = function(beforeFn) &#123;
+      var _self = this
+      return function() &#123;
+          beforeFn.apply(this, arguments)
+          return _self.apply(this, arguments)
+      &#125;
+  &#125;
+  Function.prototype.after = function(afterFn) &#123;
+      var _self = this
+      return function () &#123;
+          var ret = _self.apply(this, arguments)
+          afterFn.apply(this, arguments)
+          return ret
+      &#125;
+  &#125;
+
+  // 使用
+  a = a.before(() =&gt; alert(1)).aflter(() =&gt; alert(2))
+</code></pre>
 <p>有了before和after方法，就可以形成一条装饰链，在函数前后加入各种功能，处理各种实际问题，比如在ajax请求前加入一些参数，在表单提交前进行验证</p>
 
         </div>

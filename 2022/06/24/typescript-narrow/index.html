@@ -9,7 +9,7 @@
     
     <title>
         
-            设计模式-代理模式 |
+            typescript-narrow |
         
         Joe 的笔记
     </title>
@@ -129,7 +129,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">设计模式-代理模式</span>
+            <span class="title-hover-animation">typescript-narrow</span>
         </div>
 
         
@@ -146,8 +146,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-04-12 17:20:13</span>
-        <span class="mobile">2022-04-12 17:20</span>
+        <span class="pc">2022-06-24 11:43:18</span>
+        <span class="mobile">2022-06-24 11:43</span>
     </span>
     
     
@@ -156,7 +156,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">设计模式</a>&nbsp;
+                        <a href="/tags/typescript/">typescript</a>&nbsp;
                     </li>
                 
             </ul>
@@ -166,7 +166,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>477 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>347 字</span>
         </span>
     
     
@@ -183,47 +183,40 @@
         
 
         <div class="article-content markdown-body">
-            <h2 id="设计模式-代理模式"><a href="#设计模式-代理模式" class="headerlink" title="设计模式-代理模式"></a>设计模式-代理模式</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>给目标对象A提供一个中间对象B，如果需要访问目标对象A，得通过这个中间对象B来进行。有两种实践中的影子。1.保护代理，代理可以先过滤掉一些访问 2.虚拟代理，代理把一些开销很大的操作延迟到真正需要它的时候去创建 3 也可以把访问或修改对象的逻辑放在代理层处理</p>
-<h3 id="图片加载的代理"><a href="#图片加载的代理" class="headerlink" title="图片加载的代理"></a>图片加载的代理</h3><p>在图片加载时，需要加一个loading出现在图片显示之前，那么可以用这个方法</p>
-<pre><code class="javascript">    var myImage = (function() &#123;
-        var imgNode = document.createElement(&#39;img&#39;)
-        document.appendChild(imgNode)
-        return &#123;
-            setSrc:function(src) &#123;
-                imgNode.src = src
-            &#125;
-        &#125;
-    &#125;)()
-
-    var ProxyImage = (function() &#123;
-        var img = new Image()
-        img.onload = function() &#123;
-            myImage.setSrc(img.src)
-        &#125;
-        return &#123;
-            setSrc: function(src) &#123;
-                myImage.setSrc(&#39;../loading.gif&#39;)
-                img.src = src
-            &#125;
-        &#125;
-    &#125;)()
-
-    ProxyImg.setSrc(&#39;xxx&#39;)
+            <h2 id="typescript-–-类型收窄"><a href="#typescript-–-类型收窄" class="headerlink" title="typescript – 类型收窄"></a>typescript – 类型收窄</h2><h3 id="typeof-的类型"><a href="#typeof-的类型" class="headerlink" title="typeof 的类型"></a>typeof 的类型</h3><p>“string”<br>“number”<br>“bigint”<br>“boolean”<br>“symbol”<br>“undefined”<br>“object”<br>“function”</p>
+<h3 id="是否存在值判断"><a href="#是否存在值判断" class="headerlink" title="是否存在值判断"></a>是否存在值判断</h3><pre><code class="typescript">let a:number
+if(a) &#123;
+    return a
+&#125;
 </code></pre>
-<p>这样做的好处是符合了 <em>单一职责原则</em> 和 <em>开放封闭原则</em> , 我们的myImage只负责给图片节点设置src，这符合了单一职责原则，我们也没有改变myImage原有的功能，而是把加载中图片设置的功能放在了另一个函数，这符合开放封闭原则</p>
-<h3 id="es6的proxy"><a href="#es6的proxy" class="headerlink" title="es6的proxy"></a>es6的proxy</h3><p>es6 中引入了Proxy，可以通过Proxy 对对象访问和修改进行拦截<br>proxy 接收两个参数, target 和 handler, handler是拦截的具体方法，可以拦截对象原型上的几个方法，用的最多的是get，set，<br>另外还有deleteProperty， ownKeys等<br>所以用了Proxy后我就只能用赋值的方法来传入，这样才能被set方法拦截<br>图片加载的例子用proxy重写一下如下</p>
-<pre><code class="javascript">    let proxyImg = new Proxy(myImage, &#123;
-        set(target, propKey, value, receiver) &#123;
-            let img = new Image
-            img.onload = function () &#123;
-                myImage.setSrc(value)
-            &#125;
-            myImage.setSrc(&#39;d:\\cs\\sj\\1.png&#39;)
-            img.src = value
+<p>类似这种写法，但是不能判断 0 和 空值之间的区别</p>
+<h3 id="运用-if条件判断-或者-in判断-做收窄"><a href="#运用-if条件判断-或者-in判断-做收窄" class="headerlink" title="运用 if条件判断 或者 in判断 做收窄"></a>运用 if条件判断 或者 in判断 做收窄</h3><pre><code class="typescript">    type Fish = &#123; swim: () =&gt; void &#125;;
+    type Bird = &#123; fly: () =&gt; void &#125;;
+    type Human = &#123; swim?: () =&gt; void; fly?: () =&gt; void &#125;;
+ 
+    function move(animal: Fish | Bird | Human) &#123;
+        if (&quot;swim&quot; in animal) &#123;
+            animal;
+            // fish human
+        &#125; else &#123;
+            animal;
+            // bird human
         &#125;
-    &#125;)
-    proxyImg.setSrc = &#39;xxx&#39;
+    &#125;
 </code></pre>
+<h3 id="使用instanceof"><a href="#使用instanceof" class="headerlink" title="使用instanceof"></a>使用instanceof</h3><p>用于检查是否为另一个构造函数的实例</p>
+<h3 id="使用is-创建-类型保护函数"><a href="#使用is-创建-类型保护函数" class="headerlink" title="使用is  创建 类型保护函数"></a>使用is  创建 类型保护函数</h3><pre><code class="typescript">    function isFish(pet: Fish | Bird): pet is Fish &#123;
+        return (pet as Fish).swim !== undefined;
+    &#125;
+
+    if (isFish(pet)) &#123;
+        pet.swim()
+    &#125; else &#123;
+        pet.fly()
+    &#125;
+</code></pre>
+<p>原因: 如果一个联合类型包含两个类型，两个类型中不重合的属性的，使用时会报错，xx属性不属于某个类型， ts具有严格的空值判断！<br>如pet (Fish | Bird), 如果直接使用pet.swim, 是会报错的，这时候可以使用if语句配合 isFish()函数做类型收窄<br>当然也可以使用 ！做类型断言，或者直接把类型值都设为可选。</p>
+<h3 id="never-类型"><a href="#never-类型" class="headerlink" title="never 类型"></a>never 类型</h3><p>一般可以把never类型放在类型判断的最后，用以做报错提醒，因为没有任何类型可以分配给never类型， 当never类型有值时就会报错</p>
 
         </div>
 
@@ -233,7 +226,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F/">#设计模式</a>&nbsp;
+                        <a href="/tags/typescript/">#typescript</a>&nbsp;
                     </li>
                 
             </ul>
@@ -245,13 +238,13 @@
                     <div class="article-prev">
                         <a class="prev"
                            rel="prev"
-                           href="/2022/04/18/interview1/"
+                           href="/2022/10/17/sass-less/"
                         >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
                             </span>
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">面试小计</span>
+                                <span class="post-nav-title-item">sass&amp;less</span>
                                 <span class="post-nav-item">上一篇</span>
                             </span>
                         </a>
@@ -261,10 +254,10 @@
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2022/04/08/decorator/"
+                           href="/2022/06/21/typescript-everytype/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">设计模式--装饰者模式</span>
+                                <span class="post-nav-title-item">typescript-基本类型</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
@@ -375,7 +368,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F-%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F"><span class="nav-text">设计模式-代理模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A6%82%E8%BF%B0"><span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BD%BD%E7%9A%84%E4%BB%A3%E7%90%86"><span class="nav-text">图片加载的代理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#es6%E7%9A%84proxy"><span class="nav-text">es6的proxy</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#typescript-%E2%80%93-%E7%B1%BB%E5%9E%8B%E6%94%B6%E7%AA%84"><span class="nav-text">typescript – 类型收窄</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#typeof-%E7%9A%84%E7%B1%BB%E5%9E%8B"><span class="nav-text">typeof 的类型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8%E5%80%BC%E5%88%A4%E6%96%AD"><span class="nav-text">是否存在值判断</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BF%90%E7%94%A8-if%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD-%E6%88%96%E8%80%85-in%E5%88%A4%E6%96%AD-%E5%81%9A%E6%94%B6%E7%AA%84"><span class="nav-text">运用 if条件判断 或者 in判断 做收窄</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8instanceof"><span class="nav-text">使用instanceof</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8is-%E5%88%9B%E5%BB%BA-%E7%B1%BB%E5%9E%8B%E4%BF%9D%E6%8A%A4%E5%87%BD%E6%95%B0"><span class="nav-text">使用is  创建 类型保护函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#never-%E7%B1%BB%E5%9E%8B"><span class="nav-text">never 类型</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>

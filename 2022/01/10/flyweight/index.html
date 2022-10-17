@@ -166,7 +166,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>558 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>560 字</span>
         </span>
     
     
@@ -186,14 +186,88 @@
             <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>享元  英文为：flyweight 意思是蝇量 享元模式是一种性能优化模式</p>
 <p>理念：一个程序中使用了大量相似对象，对象的大多内部状态可以变为外部状态，剥离出外部状态后，可以用较少对象取代大量对象</p>
 <h3 id="最简单例子"><a href="#最简单例子" class="headerlink" title="最简单例子"></a>最简单例子</h3><p>内衣模特例子，有50件不同的男式内衣要拍照片</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Model</span> = <span class="keyword">function</span>(<span class="params">sex</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">sex</span> = sex</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Model</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">takePhone</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sex=&#x27;</span> + <span class="variable language_">this</span>.<span class="property">sex</span> + <span class="string">&#x27;underwear=&#x27;</span> + <span class="variable language_">this</span>.<span class="property">underwear</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> maleModel = <span class="keyword">new</span> <span class="title class_">Model</span>(<span class="string">&#x27;male&#x27;</span>)</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">1</span>; i&lt;=<span class="number">50</span>; i++) &#123;</span><br><span class="line">    maleModel.<span class="property">underwear</span> = i</span><br><span class="line">    maleModel.<span class="title function_">takePhoto</span>()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">   var Model = function(sex) &#123;
+       this.sex = sex
+   &#125;
+   Model.prototype.takePhone = function() &#123;
+       console.log(&#39;sex=&#39; + this.sex + &#39;underwear=&#39; + this.underwear)
+   &#125;
+   var maleModel = new Model(&#39;male&#39;)
+   for (let i = 1; i&lt;=50; i++) &#123;
+       maleModel.underwear = i
+       maleModel.takePhoto()
+   &#125;
+</code></pre>
 <p>这里就用了外部设置的属性：underwear来避免新建50个模特，只建了一个模特，在模特中留下了内部状态(sex)<br>但这个做法有两个缺陷：<br>1、 显示的先new了模特对象，也许不是一开始就需要所有新建对象, 最好把new这一步放在一个具体操作上，在真正需要这个对象时再进行new<br>2、 手动设置underwear不够好，最好用一个管理器来记录外部状态，共享对象通过调用管理器的方法来设置上这些外部状态</p>
-<h3 id="重新定义model"><a href="#重新定义model" class="headerlink" title="重新定义model"></a>重新定义model</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Model</span> = <span class="keyword">function</span>(<span class="params">sex</span>) &#123;</span><br><span class="line">   <span class="variable language_">this</span>.<span class="property">sex</span> = sex</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Model</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">takePhot</span> = <span class="keyword">function</span>(<span class="params">info</span>) &#123;</span><br><span class="line">    <span class="title class_">Manager</span>.<span class="title function_">add</span>(info, <span class="variable language_">this</span>)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;sex=&#x27;</span> + <span class="variable language_">this</span>.<span class="property">sex</span> + <span class="string">&#x27;size=&#x27;</span> + <span class="variable language_">this</span>.<span class="property">info</span>.<span class="property">size</span> + <span class="string">&#x27;name=&#x27;</span> +<span class="variable language_">this</span>.<span class="property">info</span>.<span class="property">name</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="工厂定义"><a href="#工厂定义" class="headerlink" title="工厂定义"></a>工厂定义</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Factory</span> = (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> obj = &#123;&#125;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        <span class="attr">create</span>: <span class="keyword">function</span>(<span class="params">sex</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (obj[sex]) &#123;</span><br><span class="line">                <span class="keyword">return</span> obj[sex]</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> obj[sex] = <span class="keyword">new</span> <span class="title class_">Model</span>(sex)</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<h3 id="管理器封装"><a href="#管理器封装" class="headerlink" title="管理器封装"></a>管理器封装</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Manager</span> = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">var</span> <span class="title class_">Database</span> = &#123;&#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    <span class="attr">add</span>: <span class="keyword">function</span> (<span class="params">id, sex, size, name</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> flyWeightObj = <span class="title class_">Factory</span>.<span class="title function_">create</span>(sex)</span><br><span class="line">      flyWeightObj.<span class="title function_">setExternalState</span>(underwear)</span><br><span class="line">      <span class="title class_">Database</span>[id] = &#123;</span><br><span class="line">        size,</span><br><span class="line">        name</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> flyWeightObj</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">setExternalState</span>: <span class="keyword">function</span> (<span class="params">id, flyWeightObj</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> <span class="title class_">Data</span> = <span class="title class_">Database</span>[id]</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> <span class="title class_">Data</span>) &#123;</span><br><span class="line">        flyWeightObj[i] = uploadData[i]</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)()</span><br></pre></td></tr></table></figure>
-<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> id = <span class="number">0</span></span><br><span class="line"><span class="variable language_">window</span>.<span class="property">start</span> = <span class="keyword">function</span>(<span class="params">sex, info</span>) &#123;</span><br><span class="line">    info.<span class="title function_">forEach</span>(<span class="function"><span class="params">i</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">var</span> model = <span class="title class_">Manager</span>.<span class="title function_">add</span>(++id, sex, info.<span class="property">size</span>, info.<span class="property">name</span>)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">start</span>(<span class="string">&#x27;男&#x27;</span>, [&#123;</span><br><span class="line">    <span class="attr">size</span>: <span class="string">&#x27;s&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;内衣1&#x27;</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    <span class="attr">size</span>: <span class="string">&#x27;m&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;内衣1&#x27;</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    <span class="attr">size</span>: <span class="string">&#x27;s&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;内衣23&#x27;</span></span><br><span class="line">&#125;])</span><br><span class="line"><span class="title function_">start</span>(<span class="string">&#x27;女&#x27;</span>, [&#123;</span><br><span class="line">    <span class="attr">size</span>: <span class="string">&#x27;s&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;内衣2&#x27;</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    <span class="attr">size</span>: <span class="string">&#x27;m&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;内衣2&#x27;</span></span><br><span class="line">&#125;,&#123;</span><br><span class="line">    <span class="attr">size</span>: <span class="string">&#x27;s&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;内衣14&#x27;</span></span><br><span class="line">&#125;])</span><br></pre></td></tr></table></figure>
-
+<h3 id="重新定义model"><a href="#重新定义model" class="headerlink" title="重新定义model"></a>重新定义model</h3><pre><code class="javascript">    var Model = function(sex) &#123;
+       this.sex = sex
+    &#125;
+    Model.prototype.takePhot = function(info) &#123;
+        Manager.add(info, this)
+        console.log(&#39;sex=&#39; + this.sex + &#39;size=&#39; + this.info.size + &#39;name=&#39; +this.info.name)
+    &#125;
+</code></pre>
+<h3 id="工厂定义"><a href="#工厂定义" class="headerlink" title="工厂定义"></a>工厂定义</h3><pre><code class="javascript">    var Factory = (function() &#123;
+        var obj = &#123;&#125;
+        return &#123;
+            create: function(sex) &#123;
+                if (obj[sex]) &#123;
+                    return obj[sex]
+                &#125; else &#123;
+                    return obj[sex] = new Model(sex)
+                &#125;
+            &#125;
+        &#125;
+    &#125;)()
+</code></pre>
+<h3 id="管理器封装"><a href="#管理器封装" class="headerlink" title="管理器封装"></a>管理器封装</h3><pre><code class="javascript">    var Manager = (function () &#123;
+      var Database = &#123;&#125;
+      return &#123;
+        add: function (id, sex, size, name) &#123;
+          var flyWeightObj = Factory.create(sex)
+          flyWeightObj.setExternalState(underwear)
+          Database[id] = &#123;
+            size,
+            name
+          &#125;
+          return flyWeightObj
+        &#125;,
+        setExternalState: function (id, flyWeightObj) &#123;
+          var Data = Database[id]
+          for (var i in Data) &#123;
+            flyWeightObj[i] = uploadData[i]
+          &#125;
+        &#125;
+      &#125;
+    &#125;)()
+</code></pre>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><pre><code class="javascript">    var id = 0
+    window.start = function(sex, info) &#123;
+        info.forEach(i =&gt; &#123;
+            var model = Manager.add(++id, sex, info.size, info.name)
+        &#125;)
+    &#125;
+    start(&#39;男&#39;, [&#123;
+        size: &#39;s&#39;,
+        name: &#39;内衣1&#39;
+    &#125;,&#123;
+        size: &#39;m&#39;,
+        name: &#39;内衣1&#39;
+    &#125;,&#123;
+        size: &#39;s&#39;,
+        name: &#39;内衣23&#39;
+    &#125;])
+    start(&#39;女&#39;, [&#123;
+        size: &#39;s&#39;,
+        name: &#39;内衣2&#39;
+    &#125;,&#123;
+        size: &#39;m&#39;,
+        name: &#39;内衣2&#39;
+    &#125;,&#123;
+        size: &#39;s&#39;,
+        name: &#39;内衣14&#39;
+    &#125;])
+</code></pre>
 
         </div>
 

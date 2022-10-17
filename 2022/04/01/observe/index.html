@@ -186,21 +186,137 @@
             <h2 id="设计模式–发布订阅模式"><a href="#设计模式–发布订阅模式" class="headerlink" title="设计模式–发布订阅模式"></a>设计模式–发布订阅模式</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>发布订阅模式又称为观察者模式，当一个对象状态改变时，所有依赖于它的对象都会得到通知。在javascript中，一般用事件模型来替代传统的发布-订阅模式</p>
 <h3 id="案例"><a href="#案例" class="headerlink" title="案例"></a>案例</h3><p>楼盘即将推出新房，想购买的客户分别在售楼处登记了自己的电话，新楼盘推出时候售楼处会遍历记录的电话，依次发送信息给他们</p>
 <h3 id="自定义事件"><a href="#自定义事件" class="headerlink" title="自定义事件"></a>自定义事件</h3><p>售楼处案例可以写成以下最简单写法, 定义一个售楼处对象，里面有个一数组存放着客户的订阅信息，一个listen方法做订阅，一个trigger方法做发布，通过push加入订阅信息，触发时遍历所有订阅信息，把订阅的方法(fn函数)全部运行一遍</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> salesOffics = &#123;&#125;</span><br><span class="line">salesOffices.<span class="property">clientList</span> = []</span><br><span class="line">saleOffices.<span class="property">listen</span> = <span class="keyword">function</span> (<span class="params">fn</span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">clientList</span>.<span class="title function_">push</span>(fn)</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.<span class="property">trigger</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> i=<span class="number">0</span>,fn;fn = <span class="variable language_">this</span>.<span class="property">clientList</span>[i];i++) &#123;</span><br><span class="line">        fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    var salesOffics = &#123;&#125;
+    salesOffices.clientList = []
+    saleOffices.listen = function (fn) &#123;
+        this.clientList.push(fn)
+    &#125;
+    salesOffices.trigger = function () &#123;
+        for (var i=0,fn;fn = this.clientList[i];i++) &#123;
+            fn.apply(this, arguments)
+        &#125;
+    &#125;
+</code></pre>
 <p>测试</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">salsesOffics.<span class="title function_">listen</span>(<span class="keyword">function</span> (<span class="params">price, squareMeter</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格 = &#x27;</span>, price)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;面积 = &#x27;</span>, squareMeter)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffics.<span class="title function_">listen</span>(<span class="keyword">function</span> (<span class="params">price, squareMeter</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格 = &#x27;</span>, price)</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;面积 = &#x27;</span>, squareMeter)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffics.<span class="title function_">trigger</span>(<span class="number">2000000</span>, <span class="number">88</span>)</span><br><span class="line">salsesOffics.<span class="title function_">trigger</span>(<span class="number">3000000</span>, <span class="number">120</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    salsesOffics.listen(function (price, squareMeter) &#123;
+        console.log(&#39;价格 = &#39;, price)
+        console.log(&#39;面积 = &#39;, squareMeter)
+    &#125;)
+    salsesOffics.listen(function (price, squareMeter) &#123;
+        console.log(&#39;价格 = &#39;, price)
+        console.log(&#39;面积 = &#39;, squareMeter)
+    &#125;)
+    salsesOffics.trigger(2000000, 88)
+    salsesOffics.trigger(3000000, 120)
+</code></pre>
 <p>这个案例的问题是假如我只想订阅88平米的房子， 120平米房子信息变化时候也会收到信息，为了区分订阅事件的不同，可以加一个key，把clientList由于 <em>数组变成对象</em> ，来区分订阅内容</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> salesOffics = &#123;&#125;</span><br><span class="line">salesOffices.<span class="property">clientList</span> = &#123;&#125;</span><br><span class="line">salesOffices.<span class="property">listen</span> = <span class="keyword">function</span> (<span class="params">fn, key</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (!salesOffices.<span class="property">clientList</span>[key]) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">clientList</span> = []</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="property">client</span>[key].<span class="title function_">push</span>(fn)</span><br><span class="line">&#125;</span><br><span class="line">salesOffices.<span class="property">trigger</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">let</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>) <span class="comment">// 取出第一个参数并将这个参数从argument移除</span></span><br><span class="line">    <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">    <span class="keyword">if</span> (!fns || !fns.<span class="property">length</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    fns.<span class="title function_">forEach</span>(<span class="function"><span class="params">f</span> =&gt;</span> f.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    var salesOffics = &#123;&#125;
+    salesOffices.clientList = &#123;&#125;
+    salesOffices.listen = function (fn, key) &#123;
+        if (!salesOffices.clientList[key]) &#123;
+            this.clientList = []
+        &#125;
+        this.client[key].push(fn)
+    &#125;
+    salesOffices.trigger = function () &#123;
+        let key = Array.prototype.shift.call(arguments) // 取出第一个参数并将这个参数从argument移除
+        let fns = this.clientList[key]
+        if (!fns || !fns.length) &#123;
+            return false
+        &#125;
+        fns.forEach(f =&gt; f.apply(this, arguments))
+    &#125;
+</code></pre>
 <p>这样改写后在使用listen时候多加一个参数</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">salesOffics.<span class="title function_">listen</span>(<span class="function">(<span class="params">price</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price), <span class="string">&#x27;88&#x27;</span>)</span><br><span class="line">salesOffics.<span class="title function_">listen</span>(<span class="function">(<span class="params">price</span>) =&gt;</span> <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price), <span class="string">&#x27;120&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    salesOffics.listen((price) =&gt; console.log(&#39;价格=&#39;, price), &#39;88&#39;)
+    salesOffics.listen((price) =&gt; console.log(&#39;价格=&#39;, price), &#39;120&#39;)
+</code></pre>
 <p>这样两次订阅分别订阅了不同的面积，只有所对应面积的信息触发会通知到订阅者</p>
 <h3 id="通用实现"><a href="#通用实现" class="headerlink" title="通用实现"></a>通用实现</h3><p>把发布订阅功能提出出来，放在一个单独的对象中，就可以在不同情况下重用这段代码<br>顺便加上删除订阅的代码</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> event = &#123;</span><br><span class="line">    <span class="attr">clientList</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">listen</span>: <span class="keyword">function</span>(<span class="params">key, fn</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">clientList</span>[key]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">clientList</span>[key] = []</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">clientList</span>[key].<span class="title function_">push</span>(fn)</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">trigger</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>)</span><br><span class="line">        <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">        <span class="keyword">if</span> (!fns || fns.<span class="property">length</span> === <span class="number">0</span>) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        fns.<span class="title function_">forEach</span>(<span class="function"><span class="params">f</span> =&gt;</span>f.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>))</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">remove</span>: <span class="keyword">function</span>(<span class="params">key, fn</span>) &#123;</span><br><span class="line">        <span class="comment">// key: 订阅类型  fn: 具体谁的订阅，如不传，删除此类型下全部订阅</span></span><br><span class="line">        <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">        <span class="keyword">if</span> (!fns) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!fn) &#123;</span><br><span class="line">            fns.<span class="property">length</span> = <span class="number">0</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> l = fns.<span class="property">length</span>; l &gt;=<span class="number">0</span>; l--) &#123;</span><br><span class="line">                <span class="keyword">var</span> _fn = fns[l]</span><br><span class="line">                <span class="keyword">if</span> (_fn === fn) &#123;</span><br><span class="line">                    fns.<span class="title function_">splice</span>(l, <span class="number">1</span>)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> installEvent = <span class="keyword">function</span>(<span class="params">obj</span>) &#123;</span><br><span class="line">    event.<span class="title function_">forEach</span>(<span class="function"><span class="params">i</span> =&gt;</span> &#123;</span><br><span class="line">        obj[i] = event[i]</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    var event = &#123;
+        clientList: &#123;&#125;,
+        listen: function(key, fn) &#123;
+            if (!this.clientList[key]) &#123;
+                this.clientList[key] = []
+            &#125;
+            this.clientList[key].push(fn)
+        &#125;,
+        trigger: function() &#123;
+            let key = Array.prototype.shift.call(arguments)
+            let fns = this.clientList[key]
+            if (!fns || fns.length === 0) return false
+            fns.forEach(f =&gt;f.apply(this, arguments))
+        &#125;,
+        remove: function(key, fn) &#123;
+            // key: 订阅类型  fn: 具体谁的订阅，如不传，删除此类型下全部订阅
+            let fns = this.clientList[key]
+            if (!fns) &#123;
+                return false
+            &#125;
+            if (!fn) &#123;
+                fns.length = 0
+            &#125; else &#123;
+                for (let l = fns.length; l &gt;=0; l--) &#123;
+                    var _fn = fns[l]
+                    if (_fn === fn) &#123;
+                        fns.splice(l, 1)
+                    &#125;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+    var installEvent = function(obj) &#123;
+        event.forEach(i =&gt; &#123;
+            obj[i] = event[i]
+        &#125;)
+    &#125;
+</code></pre>
 <p>测试代码  </p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> salsesOffice = &#123;&#125;</span><br><span class="line"><span class="title function_">intallEvent</span>(salsesOffice)</span><br><span class="line">salsesOffice.<span class="title function_">listen</span>(<span class="string">&#x27;88&#x27;</span>, fn1 = <span class="keyword">function</span>(<span class="params">price</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffice.<span class="title function_">listen</span>(<span class="string">&#x27;120&#x27;</span>, fn2 = <span class="keyword">function</span>(<span class="params">price</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffice.<span class="title function_">listen</span>(<span class="string">&#x27;120&#x27;</span>, fn3 = <span class="keyword">function</span>(<span class="params">price</span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;价格=&#x27;</span>, price)</span><br><span class="line">&#125;)</span><br><span class="line">salsesOffice.<span class="title function_">remove</span>(<span class="string">&#x27;120&#x27;</span>, fn2)</span><br></pre></td></tr></table></figure>
-
+<pre><code class="javascript">    let salsesOffice = &#123;&#125;
+    intallEvent(salsesOffice)
+    salsesOffice.listen(&#39;88&#39;, fn1 = function(price) &#123;
+        console.log(&#39;价格=&#39;, price)
+    &#125;)
+    salsesOffice.listen(&#39;120&#39;, fn2 = function(price) &#123;
+        console.log(&#39;价格=&#39;, price)
+    &#125;)
+    salsesOffice.listen(&#39;120&#39;, fn3 = function(price) &#123;
+        console.log(&#39;价格=&#39;, price)
+    &#125;)
+    salsesOffice.remove(&#39;120&#39;, fn2)
+</code></pre>
 <h3 id="先发布后订阅"><a href="#先发布后订阅" class="headerlink" title="先发布后订阅"></a>先发布后订阅</h3><p>也许有时候需要先发布信息后进行订阅，我用了一个缓存对象来实现，在listen 中触发缓存，trigger中加入缓存</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> <span class="title class_">Event</span> = &#123;</span><br><span class="line">    <span class="attr">cache</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">clientList</span>: &#123;&#125;,</span><br><span class="line">    <span class="attr">listen</span>: <span class="keyword">function</span>(<span class="params">key, fn</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">clientList</span>[key]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">clientList</span>[key] = []</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">clientList</span>[key].<span class="title function_">push</span>(fn)</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable language_">this</span>.<span class="property">cache</span>[key]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">cache</span>[key].<span class="title function_">forEach</span>(<span class="function"><span class="params">v</span>=&gt;</span>&#123;</span><br><span class="line">               fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, v);</span><br><span class="line">            &#125;)</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">cache</span>[key] = []</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">trigger</span>: <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">let</span> key = <span class="title class_">Array</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">shift</span>.<span class="title function_">call</span>(<span class="variable language_">arguments</span>)</span><br><span class="line">        <span class="keyword">let</span> fns = <span class="variable language_">this</span>.<span class="property">clientList</span>[key]</span><br><span class="line">        <span class="keyword">if</span> (!fns || fns.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!<span class="variable language_">this</span>.<span class="property">cache</span>[key]) &#123;</span><br><span class="line">                <span class="variable language_">this</span>.<span class="property">cache</span>[key] = []</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">cache</span>[key].<span class="title function_">push</span>(<span class="variable language_">arguments</span>)</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            fns.<span class="title function_">forEach</span>(<span class="function"><span class="params">f</span> =&gt;</span>f.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>))</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    var Event = &#123;
+        cache: &#123;&#125;,
+        clientList: &#123;&#125;,
+        listen: function(key, fn) &#123;
+            if (!this.clientList[key]) &#123;
+                this.clientList[key] = []
+            &#125;
+            this.clientList[key].push(fn)
+            if (this.cache[key]) &#123;
+                this.cache[key].forEach(v=&gt;&#123;
+                   fn.apply(this, v);
+                &#125;)
+                this.cache[key] = []
+            &#125;
+        &#125;,
+        trigger: function() &#123;
+            let key = Array.prototype.shift.call(arguments)
+            let fns = this.clientList[key]
+            if (!fns || fns.length === 0) &#123;
+                if (!this.cache[key]) &#123;
+                    this.cache[key] = []
+                &#125;
+                this.cache[key].push(arguments)
+            &#125; else &#123;
+                fns.forEach(f =&gt;f.apply(this, arguments))
+            &#125;
+            
+        &#125;
+    &#125;
+</code></pre>
+
         </div>
 
         

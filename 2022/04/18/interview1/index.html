@@ -166,7 +166,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>658 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>659 字</span>
         </span>
     
     
@@ -186,25 +186,59 @@
             <h2 id="2022面试记录"><a href="#2022面试记录" class="headerlink" title="2022面试记录"></a>2022面试记录</h2><h3 id="useEffect-fn-和componentDidMount有什么区别"><a href="#useEffect-fn-和componentDidMount有什么区别" class="headerlink" title="useEffect(fn, [ ])和componentDidMount有什么区别"></a>useEffect(fn, [ ])和componentDidMount有什么区别</h3><p>useEffect(fn, []) – commit阶段完成后异步调用<br>componentDidMount – commit阶段完成视图更新（mutation阶段）后，在layout阶段同步调用<br>useLayoutEffect(fn, []) – 在layout阶段同步调用，跟componentDidMount的的调用时机一致</p>
 <h3 id="vue2性能瓶颈在哪里-为什么说以前vue2在处理数据量大的页面时性能不如react"><a href="#vue2性能瓶颈在哪里-为什么说以前vue2在处理数据量大的页面时性能不如react" class="headerlink" title="vue2性能瓶颈在哪里  为什么说以前vue2在处理数据量大的页面时性能不如react"></a>vue2性能瓶颈在哪里  为什么说以前vue2在处理数据量大的页面时性能不如react</h3><p>vue2采用 Object.defineProperty 进行observe函数(监听)，要对data数据中所有数据进行深度优先遍历，劫持get，set方法， vue3采用响应式处理get的那个层级，在get方法中observe，不会深度遍历。</p>
 <h3 id="TS索引类型的用法，-如何写一个方法代替Partial函数"><a href="#TS索引类型的用法，-如何写一个方法代替Partial函数" class="headerlink" title="TS索引类型的用法， 如何写一个方法代替Partial函数"></a>TS索引类型的用法， 如何写一个方法代替Partial函数</h3><p>类似于文档中如下写法</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> pluck&lt;T, K <span class="keyword">extends</span> keyof T&gt;(<span class="attr">o</span>: T, <span class="attr">names</span>: K[]): T[K][] &#123;</span><br><span class="line">    <span class="keyword">return</span> names.<span class="title function_">map</span>(<span class="function"><span class="params">n</span> =&gt;</span> o[n]);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">interface</span> <span class="title class_">Person</span> &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="built_in">string</span>;</span><br><span class="line">    <span class="attr">age</span>: <span class="built_in">number</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">person</span>: <span class="title class_">Person</span> = &#123;</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;Jarid&#x27;</span>,</span><br><span class="line">    <span class="attr">age</span>: <span class="number">35</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">let</span> <span class="attr">strings</span>: <span class="built_in">string</span>[] = <span class="title function_">pluck</span>(person, [<span class="string">&#x27;name&#x27;</span>]); <span class="comment">// ok, string[]</span></span><br></pre></td></tr></table></figure>
-
+<pre><code class="typescript">    function pluck&lt;T, K extends keyof T&gt;(o: T, names: K[]): T[K][] &#123;
+        return names.map(n =&gt; o[n]);
+    &#125;
+    interface Person &#123;
+        name: string;
+        age: number;
+    &#125;
+    let person: Person = &#123;
+        name: &#39;Jarid&#39;,
+        age: 35
+    &#125;;
+    let strings: string[] = pluck(person, [&#39;name&#39;]); // ok, string[]
+</code></pre>
 <h3 id="TS-infer的用法"><a href="#TS-infer的用法" class="headerlink" title="TS infer的用法"></a>TS infer的用法</h3><p>条件类型推断中的简化写法</p>
-<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> <span class="title class_">Flatten</span>&lt;<span class="title class_">Type</span>&gt; = <span class="title class_">Type</span> <span class="keyword">extends</span> <span class="title class_">Array</span>&lt;infer <span class="title class_">Item</span>&gt; ? <span class="title class_">Item</span> : <span class="title class_">Type</span>;</span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Num</span> = <span class="title class_">Flatten</span>&lt;[<span class="built_in">number</span>]&gt;  <span class="comment">// Num 是number类型</span></span><br><span class="line"><span class="keyword">type</span> <span class="title class_">Obj</span> = <span class="title class_">Flatten</span>&lt;<span class="built_in">object</span>&gt;    <span class="comment">// Obj 是object类型</span></span><br></pre></td></tr></table></figure>
+<pre><code class="typescript">    type Flatten&lt;Type&gt; = Type extends Array&lt;infer Item&gt; ? Item : Type;
+    type Num = Flatten&lt;[number]&gt;  // Num 是number类型
+    type Obj = Flatten&lt;object&gt;    // Obj 是object类型
+</code></pre>
 <p><a class="link"   target="_blank" rel="noopener" href="https://www.typescriptlang.org/docs/handbook/2/conditional-types.html" >https://www.typescriptlang.org/docs/handbook/2/conditional-types.html<i class="fas fa-external-link-alt"></i></a></p>
 <h3 id="react为什么会有性能问题"><a href="#react为什么会有性能问题" class="headerlink" title="react为什么会有性能问题"></a>react为什么会有性能问题</h3><p>在 Reconcilation 期间，React 会霸占着浏览器资源，一则会导致用户触发的事件得不到响应, 二则会导致掉帧，用户可以感知到这些卡顿。React 的 Reconcilation 是CPU密集型的操作, 它就相当于我们上面说的’长进程‘。所以 React 通过Fiber 架构，让自己的Reconcilation 过程变成可被中断。 ‘适时’地让出CPU执行权，除了可以让浏览器及时地响应用户的交互</p>
 <h3 id="es5的继承"><a href="#es5的继承" class="headerlink" title="es5的继承"></a>es5的继承</h3><p>最优化方案</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">Parent5</span> () &#123;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">name</span> = <span class="string">&#x27;parent5&#x27;</span>;</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">play</span> = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">Child5</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="title class_">Parent5</span>.<span class="title function_">call</span>(<span class="variable language_">this</span>);</span><br><span class="line">  <span class="variable language_">this</span>.<span class="property">type</span> = <span class="string">&#x27;child5&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="title class_">Child5</span>.<span class="property"><span class="keyword">prototype</span></span> = <span class="title class_">Object</span>.<span class="title function_">create</span>(<span class="title class_">Parent5</span>.<span class="property"><span class="keyword">prototype</span></span>);</span><br><span class="line"><span class="title class_">Child5</span>.<span class="property"><span class="keyword">prototype</span></span>.<span class="property">constructor</span> = <span class="title class_">Child5</span>;</span><br></pre></td></tr></table></figure>
-
+<pre><code class="javascript">  function Parent5 () &#123;
+    this.name = &#39;parent5&#39;;
+    this.play = [1, 2, 3];
+  &#125;
+  function Child5() &#123;
+    Parent5.call(this);
+    this.type = &#39;child5&#39;;
+  &#125;
+  Child5.prototype = Object.create(Parent5.prototype);
+  Child5.prototype.constructor = Child5;
+</code></pre>
 <h3 id="diff-讲讲vue或者react的diff算法"><a href="#diff-讲讲vue或者react的diff算法" class="headerlink" title="diff 讲讲vue或者react的diff算法"></a>diff 讲讲vue或者react的diff算法</h3><h3 id="webpack有自己写过loader吗"><a href="#webpack有自己写过loader吗" class="headerlink" title="webpack有自己写过loader吗"></a>webpack有自己写过loader吗</h3><p><a class="link"   target="_blank" rel="noopener" href="https://jishuin.proginn.com/p/763bfbd5b278" >https://jishuin.proginn.com/p/763bfbd5b278<i class="fas fa-external-link-alt"></i></a></p>
 <h3 id="useRef-useMemo-useCallback-异同"><a href="#useRef-useMemo-useCallback-异同" class="headerlink" title="useRef, useMemo, useCallback 异同"></a>useRef, useMemo, useCallback 异同</h3><p>useMemo 是缓存数据,避免每次渲染时都做这些计算</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> getCount = <span class="title function_">useMemo</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> sum = count+<span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> sum   </span><br><span class="line">&#125;, [count]);</span><br></pre></td></tr></table></figure>
+<pre><code class="javascript">    const getCount = useMemo(() =&gt; &#123;
+        let sum = count+1
+        return sum   
+    &#125;, [count]);
+</code></pre>
 <p>useCallBack 称为缓存函数，父组件包含子组件，子组件接受一个函数，这时候当父组件更新时子组件也会更新,<br>使用useCallBack包裹后，对函数进行缓存不会传递</p>
 <p>useRef 创建一个ref对象，这个对象在渲染之间保证引用相等，可以使用useRef 来完成echarts配置options这种变量存放</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> [chartData, setChartData] = <span class="title function_">useState</span>([<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>])</span><br><span class="line"><span class="title function_">useEffect</span>(updateChart, [chartData])	</span><br><span class="line"><span class="keyword">let</span> options = <span class="title function_">useRef</span>(&#123;</span><br><span class="line">    <span class="attr">xAxis</span>: &#123;</span><br><span class="line">        <span class="attr">data</span>: []</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">updateChart</span>(<span class="params"></span>)&#123;</span><br><span class="line">    option.<span class="property">current</span>.<span class="property">xAxis</span>.<span class="property">data</span> = chartData	</span><br><span class="line">    <span class="comment">//...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
+<pre><code class="javascript">    const [chartData, setChartData] = useState([1,2,3])
+    useEffect(updateChart, [chartData])    
+    let options = useRef(&#123;
+        xAxis: &#123;
+            data: []
+        &#125;
+    &#125;)
+    function updateChart()&#123;
+        option.current.xAxis.data = chartData    
+        //...
+    &#125;
+</code></pre>
 
         </div>
 
@@ -226,13 +260,13 @@
                     <div class="article-prev">
                         <a class="prev"
                            rel="prev"
-                           href="/2022/06/21/react-hoc/"
+                           href="/2022/06/21/typescript-everytype/"
                         >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
                             </span>
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">react-hoc</span>
+                                <span class="post-nav-title-item">typescript-基本类型</span>
                                 <span class="post-nav-item">上一篇</span>
                             </span>
                         </a>
