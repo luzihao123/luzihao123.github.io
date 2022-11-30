@@ -9,7 +9,7 @@
     
     <title>
         
-            sass&amp;less |
+            mock工具 |
         
         Lone Wolf In Chill
     </title>
@@ -129,7 +129,7 @@
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">sass&amp;less</span>
+            <span class="title-hover-animation">mock工具</span>
         </div>
 
         
@@ -146,8 +146,8 @@
                         <div class="article-meta-info">
     <span class="article-date article-meta-item">
         <i class="fas fa-edit"></i>&nbsp;
-        <span class="pc">2022-10-17 10:20:19</span>
-        <span class="mobile">2022-10-17 10:20</span>
+        <span class="pc">2022-11-28 09:40:36</span>
+        <span class="mobile">2022-11-28 09:40</span>
     </span>
     
     
@@ -156,7 +156,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/css/">css</a>&nbsp;
+                        <a href="/tags/%E5%B7%A5%E5%85%B7/">工具</a>&nbsp;
                     </li>
                 
             </ul>
@@ -166,7 +166,7 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>576 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>592 字</span>
         </span>
     
     
@@ -183,129 +183,41 @@
         
 
         <div class="article-content markdown-body">
-            <h2 id="sass"><a href="#sass" class="headerlink" title="sass"></a>sass</h2><p>支持两种不同的语法，使用较多的是scss，另一种为sass语法，相比较sass语法省略了括号，分号，冒号， scss语法与css更接近，使用更多</p>
-<h3 id="变量声明-使用"><a href="#变量声明-使用" class="headerlink" title="变量声明 使用$"></a>变量声明 使用$</h3><p>使用$进行声明， 使用时可以有两种方法 $link_color 或者 #{$link_color}; 并且不区分下划线和中滑线，两者同等</p>
-<pre><code class="scss">    $link_color: blue;
-    a &#123;
-        color: $link-color;
-        background: #&#123;$link_color&#125;;
-    &#125;
-    
+            <h2 id="请求拦截-mock-js"><a href="#请求拦截-mock-js" class="headerlink" title="请求拦截 mock.js"></a>请求拦截 mock.js</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>通过拦截特定的AJAX请求，并生成给定的数据类型的随机数，以此来模拟后端同学提供的接口。<br>使用数据模板定义，随机生成定义数据的自由度大。使用MockJS的Random工具类的方法定义，这种方式自由度小，只能随机出MockJS提供的数据类型。<br>一般配合其它库使用或单独在项目中使用或者通过反向代理来实现。</p>
+<p>vue2<br>npm install mockjs -S<br>安装方式<br>在mian.js 中引入 import ‘../mock/index’<br>新建一个mock文件夹，index.js 中 Mock.mock( rurl?, rtype?, function( options ) )<br>在url ,type 匹配时 返回函数，</p>
+<p>vue3<br>npm install mockjs -S<br>npm install vite-plugin-mock<br>安装方式 vite.config.js 中 </p>
+<pre><code class="javascript">import &#123; viteMockServe &#125; from &#39;vite-plugin-mock&#39;
+export default defineConfig(command =&gt; &#123;
+  return &#123;
+    plugins: [
+      vue(),
+      viteMockServe(&#123;
+        mockPath: &#39;mock&#39;,
+        localEnabled: true,
+      &#125;)
+    ]
+  &#125;
+&#125;)
 </code></pre>
-<h3 id="嵌套规则"><a href="#嵌套规则" class="headerlink" title="嵌套规则"></a>嵌套规则</h3><p>形成清晰的嵌套和可视的层次结构，父选择器使用&amp;符号，&amp;还可以给子元素加上后缀</p>
-<pre><code class="scss">    #content &#123;
-        article &#123;
-            h1 &#123; color: #333 &#125;
-            p &#123; margin-bottom: 1.4em &#125;
-            &amp;__copy &#123;
-                display: flex;
-            &#125;
-        &#125;
-        #content aside &#123; background-color: #EEE &#125;
+<p>建一个mock文件夹 一个ts文件 </p>
+<pre><code class="typescript">  import &#123; MockMethod &#125; from &#39;vite-plugin-mock&#39;
+  export default [
+    &#123;
+      url: &#39;&#39;,
+      method: &#39;&#39;,
+      response: (&#123;query&#125;) =&gt; &#123;
+      
+      &#125;
     &#125;
+  ] as  MockMethod[]
+
+  //  response?: ((opt: &#123; [key: string]: string; body: Record&lt;string,any&gt;; query:  Record&lt;string,any&gt;, headers: Record&lt;string,      any&gt;; &#125;) =&gt; any) | any;
 </code></pre>
-<h3 id="局部文件"><a href="#局部文件" class="headerlink" title="局部文件"></a>局部文件</h3><p>不进行编译的scss文件，用于在其他文件中引入，使用 _ 作为文件名开头</p>
-<h3 id="模块化"><a href="#模块化" class="headerlink" title="模块化"></a>模块化</h3><p>使用@use语法引入，比如_bass.scss 文件，引入时不用加上文件后缀名和前面的_</p>
-<pre><code class="scss">   @use &#39;base&#39;;
-</code></pre>
-<h3 id="插值"><a href="#插值" class="headerlink" title="插值"></a>插值</h3><p>重用css声明，可以使用插值将变量和函数调用等表达式中的值注入选择权。<br>有点类似于函数，使用@mixin定义声明，@include使用</p>
-<pre><code class="scss">    @mixin theme($theme: DarkGray) &#123;
-        background: $theme;
-        box-shadow: 0 0 1px rgba($theme, .25);
-        color: #fff;
-    &#125;
-
-    .info &#123;
-        @include theme;
-    &#125;
-    .alert &#123;
-        @include theme($theme: DarkRed);
-    &#125;
-    .success &#123;
-        @include theme($theme: DarkGreen);
-    &#125;
-</code></pre>
-<h3 id="Extend-占位符"><a href="#Extend-占位符" class="headerlink" title="Extend/占位符"></a>Extend/占位符</h3><p>使用@extend允许从一个选择器共享一组css属性到另外一组选择器。 占位符使用%开头，仅在使用到时生成.<br>有利于保证编译后css的整洁</p>
-<pre><code class="scss">    /* 会生成css */
-    %message-shared &#123;
-        border: 1px solid #ccc;
-        padding: 10px;
-        color: #333;
-    &#125;
-
-    // 不会生成css
-    %equal-heights &#123;
-        display: flex;
-        flex-wrap: wrap;
-    &#125;
-
-    .message &#123;
-        @extend %message-shared;
-    &#125;
-
-    .success &#123;
-        @extend %message-shared;
-        border-color: green;
-    &#125;
-
-    .error &#123;
-        @extend %message-shared;
-        border-color: red;
-    &#125;
-
-    .warning &#123;
-        @extend %message-shared;
-        border-color: yellow;
-    &#125;
-</code></pre>
-<pre><code class="css">    /* This CSS will print because %message-shared is extended. */
-    .message, .success, .error, .warning &#123;
-        border: 1px solid #ccc;
-        padding: 10px;
-        color: #333;
-    &#125;
-
-    .success &#123;
-        border-color: green;
-    &#125;
-
-    .error &#123;
-        border-color: red;
-    &#125;
-
-    .warning &#123;
-        border-color: yellow;
-    &#125;
-</code></pre>
-<h3 id="计算操作"><a href="#计算操作" class="headerlink" title="计算操作"></a>计算操作</h3><p>在css中进行一系列的数学计算</p>
-<pre><code class="scss">    @use &quot;sass:math&quot;;
-
-    .container &#123;
-        display: flex;
-    &#125;
-
-    article[role=&quot;main&quot;] &#123;
-        width: math.div(600px, 960px) * 100%;
-    &#125;
-
-    aside[role=&quot;complementary&quot;] &#123;
-        width: math.div(300px, 960px) * 100%;
-        margin-left: auto;
-    &#125;
-</code></pre>
-<pre><code class="css">    .container &#123;
-        display: flex;
-    &#125;
-
-    article[role=&quot;main&quot;] &#123;
-        width: 62.5%;
-    &#125;
-
-    aside[role=&quot;complementary&quot;] &#123;
-        width: 31.25%;
-        margin-left: auto;
-    &#125;
-</code></pre>
+<h2 id="接口管理工具-YApi"><a href="#接口管理工具-YApi" class="headerlink" title="接口管理工具 YApi"></a>接口管理工具 YApi</h2><h3 id="优缺点-接口管理工具"><a href="#优缺点-接口管理工具" class="headerlink" title="优缺点(接口管理工具)"></a>优缺点(接口管理工具)</h3><p>优点：<br>配置功能强大，接口管理与 Mock 一体，后端修改接口 Mock 也跟着更改，可靠<br>有统一的接口管理后台，查找使用方便。<br>缺点：<br>配置复杂，依赖后端，可能会出现后端不愿意出手，或者等配置完了，接口也开发出来了的情况。mock数据都由后台控制，有什么异常情况 前端同学基本上使不上力。有背前后台分离的原则。<br>一般会作为大团队的基础建设而存在， 没有这个条件的话需慎重考虑<br>增加后台负担，与其让后台处理mock数据相关问题，倒不如加快提供真实接口数据。</p>
+<p>需先 按装chrome yapi 插件<br>git clone <a class="link"   target="_blank" rel="noopener" href="https://github.com/YMFE/cross-request" >https://github.com/YMFE/cross-request<i class="fas fa-external-link-alt"></i></a><br>使用 chrome 源码安装方式</p>
+<p>官网 <a class="link"   target="_blank" rel="noopener" href="http://yapi.smart-xwork.cn/doc/index.html" >http://yapi.smart-xwork.cn/doc/index.html<i class="fas fa-external-link-alt"></i></a></p>
+<p>添加接口后在编辑中设置请求，返回参数，使用基本信息种的mock地址可以访问，高级mock标签内可以生成更丰富数据</p>
+<p>Mock 期望 &gt; 自定义 Mock 脚本 &gt; 项目全局 mock 脚本 &gt; 普通 Mock</p>
 
         </div>
 
@@ -315,7 +227,7 @@
             <ul class="post-tags-box">
                 
                     <li class="tag-item">
-                        <a href="/tags/css/">#css</a>&nbsp;
+                        <a href="/tags/%E5%B7%A5%E5%85%B7/">#工具</a>&nbsp;
                     </li>
                 
             </ul>
@@ -324,29 +236,14 @@
         
             <div class="article-nav">
                 
-                    <div class="article-prev">
-                        <a class="prev"
-                           rel="prev"
-                           href="/2022/11/28/mock/"
-                        >
-                            <span class="left arrow-icon flex-center">
-                              <i class="fas fa-chevron-left"></i>
-                            </span>
-                            <span class="title flex-center">
-                                <span class="post-nav-title-item">mock工具</span>
-                                <span class="post-nav-item">上一篇</span>
-                            </span>
-                        </a>
-                    </div>
-                
                 
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2022/06/24/typescript-narrow/"
+                           href="/2022/10/17/sass-less/"
                         >
                             <span class="title flex-center">
-                                <span class="post-nav-title-item">typescript-narrow</span>
+                                <span class="post-nav-title-item">sass&amp;less</span>
                                 <span class="post-nav-item">下一篇</span>
                             </span>
                             <span class="right arrow-icon flex-center">
@@ -457,7 +354,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sass"><span class="nav-text">sass</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E5%A3%B0%E6%98%8E-%E4%BD%BF%E7%94%A8"><span class="nav-text">变量声明 使用$</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B5%8C%E5%A5%97%E8%A7%84%E5%88%99"><span class="nav-text">嵌套规则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%B1%80%E9%83%A8%E6%96%87%E4%BB%B6"><span class="nav-text">局部文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="nav-text">模块化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8F%92%E5%80%BC"><span class="nav-text">插值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Extend-%E5%8D%A0%E4%BD%8D%E7%AC%A6"><span class="nav-text">Extend&#x2F;占位符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%93%8D%E4%BD%9C"><span class="nav-text">计算操作</span></a></li></ol></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%B7%E6%B1%82%E6%8B%A6%E6%88%AA-mock-js"><span class="nav-text">请求拦截 mock.js</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%89%B9%E7%82%B9"><span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7-YApi"><span class="nav-text">接口管理工具 YApi</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-%E6%8E%A5%E5%8F%A3%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7"><span class="nav-text">优缺点(接口管理工具)</span></a></li></ol></li></ol>
     </div>
 </div>
         </aside>
