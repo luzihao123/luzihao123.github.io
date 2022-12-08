@@ -11,7 +11,7 @@
         
             mock工具 |
         
-        Lone Wolf In Chill
+        Lone Wolf
     </title>
     
 <link rel="stylesheet" href="/css/style.css">
@@ -21,7 +21,7 @@
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
     KEEP.hexo_config = {"hostname":"example.com","root":"/","language":"zh-CN"};
-    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://avatars.githubusercontent.com/u/31390234?v=4","favicon":"https://avatars.githubusercontent.com/u/31390234?v=4","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Oer the land of the free and the home of the brave"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":false,"expand_all":true,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"https://avatars.githubusercontent.com/u/31390234?v=4","favicon":"https://avatars.githubusercontent.com/u/31390234?v=4","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"Over the land of the free and the home of the brave"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":false}}},"local_search":{"enable":false,"preload":false},"code_copy":{"enable":true,"style":"default"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.5"};
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 个月前","year":"%s 年前"};
   </script>
 <meta name="generator" content="Hexo 5.4.2"></head>
@@ -48,7 +48,7 @@
         <div class="left">
             
             <a class="logo-title" href="/">
-                Lone Wolf In Chill
+                Lone Wolf
             </a>
         </div>
 
@@ -166,12 +166,12 @@
     
     
         <span class="article-wordcount article-meta-item">
-            <i class="fas fa-file-word"></i>&nbsp;<span>592 字</span>
+            <i class="fas fa-file-word"></i>&nbsp;<span>1.1k 字</span>
         </span>
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>2 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
         </span>
     
     
@@ -184,7 +184,63 @@
 
         <div class="article-content markdown-body">
             <h2 id="请求拦截-mock-js"><a href="#请求拦截-mock-js" class="headerlink" title="请求拦截 mock.js"></a>请求拦截 mock.js</h2><h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><p>通过拦截特定的AJAX请求，并生成给定的数据类型的随机数，以此来模拟后端同学提供的接口。<br>使用数据模板定义，随机生成定义数据的自由度大。使用MockJS的Random工具类的方法定义，这种方式自由度小，只能随机出MockJS提供的数据类型。<br>一般配合其它库使用或单独在项目中使用或者通过反向代理来实现。</p>
-<p>vue2<br>npm install mockjs -S<br>安装方式<br>在mian.js 中引入 import ‘../mock/index’<br>新建一个mock文件夹，index.js 中 Mock.mock( rurl?, rtype?, function( options ) )<br>在url ,type 匹配时 返回函数，</p>
+<p>vue2<br>npm install mockjs -S<br>安装方式<br>在mian.js 中引入 import ‘../mock/index’<br>新建一个mock文件夹，index.js 中 Mock.mock( rurl?, rtype?, function( options ) )<br>在url ,type 匹配时 返回函数</p>
+<pre><code class="javascript">
+  Mock.mock(&#123;
+    &#39;list|2-10&#39;: [&#123;
+        &#39;id&#39;: ()=&gt;Random.integer(20,100),
+        &#39;name&#39;: ()=&gt;Random.ctitle(),
+        &#39;date&#39;:()=&gt;Random.date(&quot;yyyy-MM-dd&quot;)
+    &#125;]
+  &#125;);
+
+  Mock.mock(&#123;
+    &#39;regexp&#39;: /[a-z][A-Z][0-9]/
+  &#125;)
+
+  Mock.mock(&#123;
+    &quot;array|1&quot;: [
+      &#123;title:&quot;AMD&quot;&#125;,
+      &#123;title:&quot;CMD&quot;&#125;,
+      &#123;title:&quot;UMD&quot;&#125;,
+    ]
+  &#125;)
+
+  Mock.mock(&#123;
+    &quot;object|2-4&quot;: &#123;
+      &quot;110000&quot;: &quot;北京市&quot;,
+      &quot;120000&quot;: &quot;天津市&quot;,
+      &quot;130000&quot;: &quot;河北省&quot;,
+      &quot;140000&quot;: &quot;山西省&quot;
+    &#125;
+  &#125;)
+
+  Mock.mock(&#123;
+    &quot;boolean|1&quot;: true
+  &#125;)
+
+</code></pre>
+<p>（1）属性值是字符串 String</p>
+<p>‘name|min-max’: string<br>通过重复 string 生成一个字符串，重复次数大于等于 min，小于等于 max。</p>
+<p>‘name|count’: string<br>通过重复 string 生成一个字符串，重复次数等于 count。</p>
+<p>（2） 属性值是数字 Number</p>
+<p>‘name|+1’: number<br>属性值自动加 1，初始值为 number。</p>
+<p>‘name|min-max’: number<br>生成一个大于等于 min、小于等于 max 的整数，属性值 number 只是用来确定类型。</p>
+<p>‘name|min-max.dmin-dmax’: number<br>生成一个浮点数，整数部分大于等于 min、小于等于 max，小数部分保留 dmin 到 dmax 位。</p>
+<p>（3）属性值是布尔型 Boolean</p>
+<p>‘name|1’: boolean</p>
+<p>随机生成一个布尔值，值为 true 的概率是 1/2，值为 false 的概率同样是 1/2。</p>
+<p>（4）属性值是对象 Object</p>
+<p>‘name|count’: object<br>从属性值 object 中随机选取 count 个属性。</p>
+<p>‘name|min-max’: object<br>从属性值 object 中随机选取 min 到 max 个属性。</p>
+<p>（5）属性值是数组 Array</p>
+<p>‘name|1’: array<br>从属性值 array 中随机选取 1 个元素，作为最终值。</p>
+<p>‘name|+1’: array<br>从属性值 array 中顺序选取 1 个元素，作为最终值。</p>
+<p>‘name|min-max’: array<br>通过重复属性值 array 生成一个新数组，重复次数大于等于 min，小于等于 max。</p>
+<p>‘name|count’: array<br>通过重复属性值 array 生成一个新数组，重复次数为 count。</p>
+<p>如果因为get请求url后加了参数无法匹配到mockjs,就把mockjs中url以正则方式改写</p>
+<pre><code class="javascript">  Mock.mock(RegExp(&#39;/api/getQuery?&#39; + &quot;.*&quot;), &quot;get&quot;, example.getQuery);
+</code></pre>
 <p>vue3<br>npm install mockjs -S<br>npm install vite-plugin-mock<br>安装方式 vite.config.js 中 </p>
 <pre><code class="javascript">import &#123; viteMockServe &#125; from &#39;vite-plugin-mock&#39;
 export default defineConfig(command =&gt; &#123;
@@ -205,7 +261,7 @@ export default defineConfig(command =&gt; &#123;
     &#123;
       url: &#39;&#39;,
       method: &#39;&#39;,
-      response: (&#123;query&#125;) =&gt; &#123;
+      response: (&#123;query, boy, headers&#125;) =&gt; &#123;
       
       &#125;
     &#125;
